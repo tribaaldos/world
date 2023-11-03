@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "allowImportingTsExtensions": true,
+      "noEmit": true, // or "emitDeclarationOnly": true
+      "target": "es5",
+      "module": "commonjs",
+      "jsx": "react",
+      "esModuleInterop": true,
+      "allowJs": true,
+      "outDir": "./dist",
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+  }
+  

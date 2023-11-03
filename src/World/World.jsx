@@ -1,41 +1,59 @@
-import Lights from './Lights'
-import { useRef } from 'react';
-import { useGLTF } from '@react-three/drei'
-function Box() {
-    return (
-        <mesh position={[ 0, 0.5, 0]} castShadow receiveShadow wireframe={true}>
-            <boxGeometry args={[1, 1, 1]}/>
-            <meshStandardMaterial color="hotpink" />
-        </mesh>
-    );
+import { Suspense, useMemo } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { Physics } from '@react-three/rapier'
+import { KeyboardControls, OrbitControls } from '@react-three/drei'
+import { RigidBody } from '@react-three/rapier'
+import WizardController from '../components/PlayerController'
+import Plane from './Plane'
+export const Controls = {
+  forward: 'forward',
+  back: 'back',
+  left: 'left',
+  right: 'right',
+  run: 'run',
+  jump: 'jump'
 }
 
-function Plane() {
-    return (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow >
-            <planeGeometry args={[50, 50]} />
-            <meshBasicMaterial color="lightblue" />
-        </mesh>
-    );
+const Experience = () => {
+  const map = useMemo(
+    () => [
+      { name: Controls.forward, keys: ['KeyW', 'ArrowUp'] },
+      { name: Controls.back, keys: ['KeyS', 'ArrowDown'] },
+      { name: Controls.left, keys: ['KeyA', 'ArrowLeft'] },
+      { name: Controls.right, keys: ['KeyD', 'ArrowRight'] },
+      { name: Controls.run, keys: ['ShiftLeft'] },
+      { name: Controls.jump, keys: ['Space'] }
+    ],
+    []
+  )
+  return (
+    <KeyboardControls map={map}>
+      <Canvas shadows camera={{ position: [0, 6, 8], fov: 75 }}>
+        <Suspense fallback={null}>
+          <Physics debug={true}>
+            <OrbitControls />
+            <ambientLight intensity={1} />
+            <directionalLight position={[5, 5, 5]} intensity={2} castShadow color={'red'} />
+            {/* FLOOR */}
+            <RigidBody type="fixed" colliders="trimesh">
+              {/* <Plane receiveShadow args={[12, 12]} rotation={[-Math.PI / 2, 0, 0]}>
+                <meshStandardMaterial color="#fff" />
+              </Plane> */}
+              <Plane />
+            </RigidBody>
+            <WizardController />
+            <RigidBody position={[7, 3, 0]}>
+              <mesh>
+                <boxGeometry args={[1, 1, 1]} />
+                <meshStandardMaterial color="green" />
+              </mesh>
+            </RigidBody>
+
+          </Physics>
+        </Suspense>
+      </Canvas>
+    </KeyboardControls>
+  )
 }
-const Model = () => {
-    const gltf = useGLTF('/static/models/character.gltf');
-    const modelRef = useRef();
-  
-    return <primitive object={gltf.scene} scale={0.01} ref={modelRef} />;
-  };
 
-
-
-export default function World() {
-
-    return (
-        <>
-            <Lights />
-            <Box/>
-     
-            <Plane />
-            <Model />
-        </>
-    )
-}
+export default Experience
