@@ -1,4 +1,3 @@
-'use client'
 import { useState, useRef } from 'react'
 import { CapsuleCollider, RapierRigidBody, RigidBody } from '@react-three/rapier'
 import { useKeyboardControls } from '@react-three/drei'
@@ -8,9 +7,10 @@ import { Controls } from '../World/World'
 import { Group } from 'three'
 import * as THREE from 'three'
 import { Action } from './Player'
+import React from 'react';
 
-const JUMP_FORCE = 1.5
-const MOVE_SPEED = 1.5
+const JUMP_FORCE = 2
+const MOVE_SPEED = 0.1
 const MAX_VEL = 1
 
 const PlayerController = () => {
@@ -38,7 +38,7 @@ const PlayerController = () => {
     }
   }
 
-  const wizRef = useRef<Group>(null!)
+  const playerRef = useRef<Group>(null!)
 
   useFrame((state) => {
     const impulse = { x: 0, y: 0, z: 0 }
@@ -72,16 +72,16 @@ const PlayerController = () => {
     rigidBody.current.applyImpulse(impulse, true)
     if (changeRotation) {
       const angle = Math.atan2(linvel.x, linvel.z)
-      wizRef.current.rotation.y = angle
+      playerRef.current.rotation.y = angle
     }
 
     // CAMERA FOLLOW
-    const wizWorldPosition = wizRef.current.getWorldPosition(new THREE.Vector3())
-    state.camera.position.x = wizWorldPosition.x
-    state.camera.position.z = wizWorldPosition.z + 10
+    const playerWorldPosition = playerRef.current.getWorldPosition(new THREE.Vector3())
+    state.camera.position.x = playerWorldPosition.x
+    state.camera.position.z = playerWorldPosition.z + 6
 
-    // const targetLookAt = new THREE.Vector3(wizWorldPosition.x, 0, wizWorldPosition.z)
-    // state.camera.lookAt(targetLookAt)
+    const targetLookAt = new THREE.Vector3(playerWorldPosition.x, 0, playerWorldPosition.z)
+    state.camera.lookAt(targetLookAt)
   })
 
   return (
@@ -95,7 +95,7 @@ const PlayerController = () => {
           setIsOnFloor(true)
         }}>
         <CapsuleCollider args={[0.7, 0.4]} position={[0, 1.1, 0]} />
-        <group ref={wizRef}>
+        <group ref={playerRef}>
           <Player action={action} />
         </group>
       </RigidBody>

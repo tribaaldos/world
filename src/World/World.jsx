@@ -42,7 +42,7 @@ const Experience = () => {
               <Plane />
             </RigidBody>
             <WizardController />
-            <RigidBody position={[7, 3, 0]}>
+            <RigidBody position={[2, 2, 0]}>
               <mesh>
                 <boxGeometry args={[1, 1, 1]} />
                 <meshStandardMaterial color="green" />
