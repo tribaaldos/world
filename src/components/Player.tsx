@@ -31,7 +31,6 @@ const Player = ({ action }: PlayerProps) => {
   const { actions, mixer } = useAnimations(animations, playerRef)
 
   useEffect(() => {
-    console.log(scene)
     actions['idle'].play()
   }, [actions])
 
