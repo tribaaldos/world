@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGLTF } from '@react-three/drei';
+// import { useGLTF } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import * as THREE from 'three'
 
@@ -9,13 +9,13 @@ const floor1Material = new THREE.MeshStandardMaterial({ color: 'red' })
 
 const Plane = () => {
     
-    const plane = useGLTF('/static/models/plane.glb');
+    // const plane = useGLTF('/static/models/plane.glb');
 
     return (
         <>
 
                 <RigidBody position={[0, -1, 0]} type="fixed" colliders="trimesh">
-                    <primitive object={plane.scene} />;
+                    {/* <primitive object={plane.scene} />; */}
                     <mesh geometry={boxGeometry} material={floor1Material} position={[0, - 0.1, 0]} scale={[10, 0.2, 10]} receiveShadow />
                 </RigidBody>
 
