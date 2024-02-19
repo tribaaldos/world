@@ -9,13 +9,13 @@ const floor1Material = new THREE.MeshStandardMaterial({ color: 'red' })
 
 const Plane = () => {
 
-    const plane = useGLTF('/static/models/plane.glb');
+    const plane = useGLTF('/static/models/grass.glb');
 
     return (
         <>
 
-                <RigidBody position={[0, -5, 0]} type="fixed" colliders="trimesh">
-                    <primitive object={plane.scene} />;
+                <RigidBody position={[0, -5, 0]} type="fixed" colliders="box">
+                    <primitive object={grass.scene} />;
                     {/* <mesh geometry={boxGeometry} material={floor1Material} position={[0, - 0.1, 0]} scale={[10, 0.2, 10]} receiveShadow /> */}
                 </RigidBody>
 

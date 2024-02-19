@@ -7,6 +7,8 @@ import WizardController from '../components/PlayerController'
 import Plane from './Plane'
 import { Perf } from 'r3f-perf'
 import Leva from './Leva'
+import Lights from './Lights'
+import Keqing from '../components/Keqing'
 
 export const Controls = {
   forward: 'forward',
@@ -38,12 +40,11 @@ const Experience = ({ perfVisible, planeScale,}) => {
             <Physics debug={true}>
               {perfVisible ? <Perf position="top-left" /> : null}
               <Perf />
-              <Leva />
+              {/* <Leva /> */}
               <OrbitControls />
-              <ambientLight intensity={1} />
-              <directionalLight position={[5, 5, 5]} intensity={2} castShadow color={'red'} />
+              <Lights />
               {/* FLOOR */}
-              
+              <Keqing />
               <RigidBody type="fixed" colliders="trimesh">
                 {/* <Plane receiveShadow args={[12, 12]} rotation={[-Math.PI / 2, 0, 0]}>
                 <meshStandardMaterial color="#fff" />

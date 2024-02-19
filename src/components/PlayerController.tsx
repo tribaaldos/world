@@ -8,9 +8,10 @@ import { Group } from 'three'
 import * as THREE from 'three'
 import { Action } from './Player'
 import React from 'react';
+import Keqing from './Keqing'
 
-const JUMP_FORCE = 2
-const MOVE_SPEED = 0.1
+const JUMP_FORCE = 1
+const MOVE_SPEED = 0.4
 const MAX_VEL = 1
 
 const PlayerController = () => {
@@ -24,7 +25,7 @@ const PlayerController = () => {
   const [action, setAction] = useState<keyof Action>('idle')
 
   const rigidBody = useRef<RapierRigidBody>(null!)
-  // const isOnFloor = useRef(true);
+  // const isOnFloor = useRef(true); 
 
   const [isOnFloor, setIsOnFloor] = useState(true)
 
@@ -97,6 +98,7 @@ const PlayerController = () => {
         <CapsuleCollider args={[0.7, 0.4]} position={[0, 1.1, 0]} />
         <group ref={playerRef}>
           <Player action={action} />
+          <Keqing action={action} />
         </group>
       </RigidBody>
     </group>

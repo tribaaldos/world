@@ -1,7 +1,11 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
 import { useState, useEffect, useRef } from 'react'
 import { AnimationAction, Group, Mesh } from 'three'
+import { useFBX } from '@react-three/drei'
 import React from 'react';
+
+
+
 export type Action = {
   idle: AnimationAction
   walk: AnimationAction
@@ -15,6 +19,7 @@ interface PlayerProps {
 }
 
 const Player = ({ action }: PlayerProps) => {
+
   const { scene, animations } = useGLTF('/static/models/player4.glb')
 
   const [currentAction, /*setCurrentAction*/] = useState<keyof Action>('idle')
@@ -51,3 +56,5 @@ const Player = ({ action }: PlayerProps) => {
 }
 
 export default Player
+
+useFBX.preload("/animations/Walking.fbx");
