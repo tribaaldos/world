@@ -1,57 +1,43 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useAnimations, useGLTF } from '@react-three/drei';
+import { AnimationAction, Group, Mesh } from 'three';
 
-import React, { useRef, useEffect, useState } from "react";
-import { useGLTF, useAnimations, useFBX } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-export default function Keqing(props) {
-    const { nodes, materials } = useGLTF("/static/models/keqing.glb");
+const Player = ({ action }) => {
+  const { scene, animations } = useGLTF('/static/models/keqing.glb');
 
-    const group = useRef();
+  const [currentAction, /*setCurrentAction*/] = useState('idle');
 
-    const { animations: idleAnimation } = useFBX("/static/animations/Idle.fbx");
-    const { animations: walkingAnimation } = useFBX("/static/animations/Walking.fbx");
+  // manually add shadows to all meshes in the model
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child instanceof Mesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+  }, [scene]);
 
-    idleAnimation[0].name = "Idle";
-    walkingAnimation[0].name = "Walking";
+  const playerRef = useRef(null);
+  const { actions, mixer } = useAnimations(animations, playerRef);
 
-    const { actions } = useAnimations(
-        [idleAnimation[0], walkingAnimation[0]],
-        group
-    );
+  useEffect(() => {
+    actions['idle'].play();
+  }, [actions]);
 
-    const [animation, setAnimation] = useState("Idle");
-    
-    return (
-        <group scale={0.01} {...props} dispose={null}>
-            <group rotation={[-Math.PI / 2, 0, 0]} scale={100}>
-                <primitive object={nodes._rootJoint} />
-                <skinnedMesh
-                    geometry={nodes.Object_247.geometry}
-                    material={materials.material}
-                    skeleton={nodes.Object_247.skeleton}
-                />
-                <skinnedMesh
-                    geometry={nodes.Object_248.geometry}
-                    material={materials.material_1}
-                    skeleton={nodes.Object_248.skeleton}
-                />
-                <skinnedMesh
-                    geometry={nodes.Object_249.geometry}
-                    material={materials.material_2}
-                    skeleton={nodes.Object_249.skeleton}
-                />
-                <skinnedMesh
-                    geometry={nodes.Object_250.geometry}
-                    material={materials.material_3}
-                    skeleton={nodes.Object_250.skeleton}
-                />
-                <skinnedMesh
-                    geometry={nodes.Object_251.geometry}
-                    material={materials.material_4}
-                    skeleton={nodes.Object_251.skeleton}
-                />
-            </group>
-        </group>
-    );
-}
+  useEffect(() => {
+    actions[action]?.reset().fadeIn(0.5).play();
 
-useGLTF.preload("/static/models/keqing.glb");
+    return () => {
+      // Cleanup function to stop the mixer on unmount
+      actions[action].fadeOut(0.5);
+    };
+  }, [action, actions]);
+
+  return (
+    <group castShadow ref={playerRef}>
+      <primitive castShadow object={scene} />
+    </group>
+  );
+};
+
+export default Player;
